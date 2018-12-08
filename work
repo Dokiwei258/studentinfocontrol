@@ -1,0 +1,382 @@
+//sysuÑ§ÉúÐÅÏ¢¹ÜÀíÏµÍ³ 
+#include<iostream>
+#define MAX_Student 100//×î´óÑ§Éú¹ÜÀíÊý
+typedef int rank
+using namespace std;
+string subject[3]={"c++","math analysis","English"}
+void admincontrol();
+void studentcontrol();
+class student;
+class admin
+{
+	protected:
+		int size,capacity;//ÈÝÁ¿ºÍ×î´óÈÝÁ¿ 
+		student *elem;//Êý¾ÝÇø£¬´æ´¢Ñ§Éú 
+		void expand();//À©´óÊý¾ÝÇø 
+		void shrink();//ËõÐ¡Êý¾ÝÇø 
+		void Sort(rank lo,rank hi);//ÅÅÐòº¯Êý 
+		rank Max(rank lo,rank hi);//Ñ°ÕÒ×î´órankµÄÈË²¢·µ»Ørank
+	public:
+		admin(int c=MAX_Student,int s=0){elem=new student[capacity=c];}//¹¹Ôìº¯Êý³õÊ¼»¯Êý¾ÝÇø 
+		~admin(){delete []elem}//Îö¹¹º¯Êý 
+		rank size() const{return size;}//·µ»Ø´óÐ¡ 
+		bool empty() const{return !size;}//ÅÐ¶Ï¿Õº¯Êý 
+		//int disordered()const;//ÅÐ¶ÏÊÇ·ñÓÐÐòº¯Êý 
+		rank find(T const& elem,rank lo,rank hi) const;//Ñ§ºÅÎÞÐòÑ°ÕÒº¯Êý 
+		rank search(T const& elem,rank lo,rank hi) const;//Ñ§ºÅÓÐÐòÑ°ÕÒº¯Êý 
+		student remove(rank r);//É¾³ýÑ§Éúº¯Êý 
+		int remove(rank lo,rank hi);//É¾³ýÇø¼äµÄº¯Êý 
+		int insert(rank r,student const&e);//²åÈëÑ§ÉúµÄº¯Êý 
+		void newstudent();//ÐÂ½¨Ñ§ÉúµÄº¯Êý 
+		void dosort(student *T,rank lo,rank hi,int flag);//ÅÅÐò·ÖÖ§ 
+		void namesort(student *T,rank lo,rank hi,int flag);//ÒÔÐÕÃûÅÅÐò 
+		void stunumsort(student *T,rank lo,rank hi,int flag);//ÒÔÑ§ºÅ½øÐÐÅÅÐò 
+		void scoresort(student *T,rank lo,rank hi,int flag);//ÒÔ×Ü·ÖÊý½øÐÐÅÅÐò 
+		//bool flag;
+		friend void admincontrol;
+		friend void studentcontrol;
+};
+class student//Ñ§ÉúÀà 
+{
+	protected:
+		int Rank;//ÅÅÃû 
+		double* score;//´¢´æµ¥¿Æ·ÖÊý 
+		double allscore;//×Ü·Ö 
+		string name,studentid,password,email,phonenum;//·Ö±ð´¢´æÐÕÃû,Ñ§ºÅ,ÃÜÂë£¬ÓÊÏä£¬µç»°ºÅÂë 
+		int rank(){return Rank;}//·µ»ØÅÅÃû 
+		void copy(student const A);//¸´ÖÆÑ§Éúº¯Êý 
+	public:
+		student(int rank=0;string password="0"){double v=0;elem=new int[3];for(int i=0;i!=3;elem[i++]=v);allsore=0;}//¹¹Ôìº¯Êý£¬¹¹Ôì³õÊ¼ÃÜÂë0£¬Ñ§ÉúµÄ3¿Æ³É¼¨0 
+		student(student const &A){copyform(A);}//¹¹Ôìº¯Êý¸´ÖÆA 
+        ~student(delete [] score;)//Îö¹¹º¯Êý£¬É¾³ý³É¼¨Çø 
+        alterpassword(string k){password=k;}//ÐÞ¸ÄÃÜÂë 
+        //student&operator[](rank r)const;
+        student &operator = (student const& A){copy(A);}//ÖØÔØÔËËã·û=Îª¸´ÖÆÓÒ²à¶ÔÏó 
+        friend class admin;//adminÎªÓÑÔª 
+        friend void studentcontrol;
+        friend void adminconreol;
+};
+void student::copy(student const A)
+{
+	Rank=A.Rank;
+	score=A.score;
+	name=A.name;
+	studentid=A.studentid;
+	password=A.password;
+	email=A.email;
+	phonenum=A.phonenum;
+}
+void admin::newstudent()
+{
+	if(size>MAX_Student)
+	  expand();
+	size++;
+	cout << "ÇëÊäÈëÑ§ÉúÃû×Ö" << endl;
+	cin >> elem[size].name;
+	cout << "ÇëÊäÈëËûµÄÑ§ºÅ" << endl;
+	cin >> elem[size].studentid;
+	cout << "ÇëÊäÈëËûµÄÈý¿Æ³É¼¨" << endl;
+	for(int i=0;i!=3;i++)
+	   {
+	   	cout << subject[i] << " µÄ³É¼¨ÊÇ" <<endl;
+	   	cin >> elem[size].score[i];
+	   }
+}
+rank admin::Max(rank lo,rank hi)
+{
+	rank max;
+	if(!empty())
+	   return 0;
+	max=elem[0].Rank;
+	for (int i=1;i!=size;i++)
+	   if(elem[i].Rank>max)
+	      max=elem[i].Rank;
+	return max;
+}
+void admin::expand()
+{
+	if(size<capacity)
+	   return;
+	student *oldelem = elem;
+	elem = new student[2*capacity];
+	for(int i=0;i!=size;i++)
+	elem[i]=oldelem[i];
+	delete [] oldelem;
+}
+void admin::shrink()
+{
+	if(size>capacity/2)
+	   return;
+	student *oldelem = elem;
+	elem = new student[capacity/2+1];
+	for(int i=0;i!=size;i++)
+	elem[i]=oldelem[i];
+	delete [] oldelem;
+}
+void admin::remove(rank r)
+{
+	for(int i=r+1;i!=size;i++)
+	   elem[i-1]=elem[i];
+	elem[size]=0;
+	size--;
+	shrink();
+}
+void admin::remove(rank lo,rank hi)
+{
+	for(int i=lo;i<=hi;i++)
+	  remove(elem[i]);
+}
+void admin::Sort(rank lo,rank hi)
+{
+	cout << "ÇëÊäÈë°´Ê²Ã´½øÐÐÅÅÐò" << endl;
+	cout << "[1].ÐÕÃû"<< endl;
+	cout << "[2].Ñ§ºÅ" << endl;
+	cout << "[3].×Ü³É¼¨" << endl;
+	cout << "[4].·µ»Ø" << endl;
+	int it;
+	cin >> it;
+	switch(it)
+	{
+		case 1:
+			dosort(elem,0,size-1,1);
+			break;
+		case 2:
+			dosort(elem,0,size-1,2);
+			break;
+		case 3:
+			dosort(elem,0,size-1,3);
+			break;
+		default:
+			break;
+	}
+}
+void admin::dosort(student *T,rank lo,rank hi,int flag)
+{
+	cout << "[0].ÉýÐò" << endl;
+	cout << "[1].½µÐò" << endl;
+	int it;
+	cin >> it;
+	if(it!=0&&it!=1)
+	   {
+	   	cout << "ÎÞÐ§ÊäÈë" << endl;
+	   	return;
+	   }
+	switch(flag)
+	{
+		case 1:
+			namesort(T,lo,hi,it);
+			break;
+		case 2:
+			stunumsort(T,lo,hi,it);
+			break;
+		case 3:
+			scoresort(T,lo,hi,it);
+			break;
+		default:
+			break;
+	}
+}
+void admin::scoresort(student *T,rank lo,rank hi,int flag)
+{
+	bool flag1=false
+	if (!flag)
+	  {
+	  	for (int j=hi;j>=0;j--)
+	  	   {
+			 for(int i=0;i<j;i++)
+	  	      if(T[i].allscore<T[i+1].allscore)
+	  	         {
+	  	         	swap(T[i],T[i+1]);
+	  	         	flag1=true;
+				   }
+			 if(!flag1)
+			    break;
+			 else
+			    flag1=false;
+	       }
+}
+void admin::namesort(student *T,rank lo,rank hi,int flag)
+{
+	bool flag1=false
+	if (!flag)
+	  {
+	  	for (int j=hi;j>=0;j--)
+	  	   {
+			 for(int i=0;i<j;i++)
+	  	      if(T[i].name<T[i+1].name)
+	  	         {
+	  	         	swap(T[i],T[i+1]);
+	  	         	flag1=true;
+				   }
+			 if(!flag1)
+			    break;
+			 else
+			    flag1=false;
+	       }
+}
+void admin::stunumsort(student *T,rank lo,rank hi,int flag)
+{
+	bool flag1=false
+	if (!flag)
+	  {
+	  	for (int j=hi;j>=0;j--)
+	  	   {
+			 for(int i=0;i<j;i++)
+	  	      if(int(T[i].studentid)<int(T[i+1].studentid))
+	  	         {
+	  	         	swap(T[i],T[i+1]);
+	  	         	flag1=true;
+				   }
+			 if(!flag1)
+			    break;
+			 else
+			    flag1=false;
+	       }
+}
+rank find(string const e,rank lo,rank hi) const
+{
+	for(int i=lo;i<=hi,i++)
+	   if(elem[i].studentid==e)
+	      return i;
+	return -1;
+}
+rank search(string const e,rank lo,rank hi)
+{
+	int mi=(lo+hi)/2;
+	if(lo>=hi)
+	   return -1;
+	if (elem[mi].studentid==e)
+	   return mi;
+	search(e,lo,mi);
+	search(e,mi+1,hi);
+}
+int insert(rank r,student const&e)
+{
+	if(size+1>capacity)
+	   expand();
+	for(int i=size;i>=r;i++)
+	   elem[i+1]=elem[i];
+	elem[r]=e;
+	size++;
+}
+
+int main
+{
+	cout << "»¶Ó­À´µ½ÖÐÉ½´óÑ§ÐÅÏ¢¹ÜÀíÏµÍ³" << endl;
+	cout << "Çë°´ÈÎÒâ¼ü¿ªÊ¼ÏÂÒ»²½²Ù×÷" <<endl;
+	system("pause");
+	char it;
+	admin administrator;
+	while(1)
+	{
+		cout << "ÇëÎÊÄúÊÇ" << endl;
+		cout << "[1].Ñ§Éú" << endl;
+		cout << "[2].¹ÜÀíÔ±" << endl;
+		cout << "[3].ÍË³ö" <<endl;
+		cin >> it;
+		if(it=='1')
+		   	studentcontrol();
+		else if(it=='2')
+			admincontrol();
+		else if(it=='3')
+		    break;
+		else
+		    cout << "ÊäÈëÓÐÎó" << endl;
+	}
+}
+void studentcontrol()
+{
+	cout << "[1].µÇÂ¼" << endl;
+	cout << "[2].×¢²á" << endl;
+	cout << "[3].·µ»Ø" <<endl;
+	int it;
+	cin >> it;
+	if (it==1)
+	   {
+	   	string stunum,password;
+	   	int i=0;
+	   	cout << "ÇëÊäÈëÑ§ºÅ" << endl;
+	   	cin >> stunum;
+	   	cout << "ÇëÊäÈëÃÜÂë" << endl;
+	   	cin >> password;
+	   	for (;i!=administrator.size;i++)
+	   	   {
+			 if((administrator.elem[i]).studentid==stunum&&(administrator.elem[i]).password==password)
+	   	       break;
+	   	    if((administrator.elem[i]).studentid==stunum&&(administrator.elem[i]).password!=password)
+	   	       	{
+					  cout << "ÃÜÂë´íÎó" <<endl;
+					  return;
+				}
+			if((administrator.elem[i]).studentid!=stunum)
+			   {
+			   cout << "²»´æÔÚÕâ¸öÑ§ºÅµÄÑ§Éú" << endl;
+			   return;
+		       }
+		   }
+		cout << "»¶Ó­Äú" << (administrator.elem[i]).name << " Í¬Ñ§" << endl;
+		while (1)
+		{
+			cout << "[1].²éÑ¯ÅÅÃû" << endl;
+			cout << "[2].²éÑ¯³É¼¨" << endl;
+			//cout << "[3].²éÑ¯¸öÈËÐÅÏ¢" << endl;
+			cout << "[3].ÍË³ö" << endl;
+			int it1;
+			cin << it1;
+			if(it1==3)
+			   break;
+			switch(it1)
+			{
+				case 1:
+					cout << "ÄúµÄÅÅÃûÊÇ" << (administrator.elem[i]).Rank << endl;
+					break;
+				case 2:
+					for(int j=0;j!=3;j++)
+					    	cout << a[j] << " µÄ³É¼¨ÊÇ" << (administrator.elem[i]).score[j] << endl;
+					cout << "×Ü³É¼¨ÊÇ " <<(administrator.elem[i]).allscore << endl;
+					break;
+				default:
+					break;
+			}
+	}
+	   }
+	if (it==2)
+	{
+		cout << "ÇëÊäÈëÄãµÄÑ§ºÅºÍÐÕÃû" <<endl;
+		string stuid,name,password,email,phonenum;
+		cin >> stuid >> name ;
+		for(int p=0;p!=size;p++)
+		   if((administrator.elem[p]).studentid==stuid)
+		       {
+		       	cout << "ÄãµÄÐÅÏ¢ÒÑ±»Â¼ÈëÏµÍ³£¬ÇëÇ°È¥µÇÂ¼" << endl;
+		       	return;
+			   }
+		student e;
+		e.name=name;
+		e.studentid=stuid;
+		while(1)
+		{
+		cout << "ÇëÐÞ¸ÄÄúµÄÃÜÂë(ÖÁÉÙ6Î»)" << endl;
+		cin >> password;
+		if(password.size()<6)
+		    cout << "ÎÞÐ§ÃÜÂë" << endl;
+		else
+		    break;
+ 	    }
+		e.alterpassword(password);
+		for(int j=0;j!=3;j++)
+		   {
+		   	cout << "ÇëÊäÈë" << a[j] << " µÄ³É¼¨" <<endl;
+		   	cin >> (administrator.elem[i]).score[j];
+		   	(administrator.elem[i]).allscore+=(administrator.elem[i]).score[j];
+		   }
+		cout << "Íê³É´´½¨" <<endl;
+		cout << "ÇëµÇÈëÏµÍ³" <<endl;
+		return;
+	}
+}
+void admincontrol()
+{
+	
+}
+
