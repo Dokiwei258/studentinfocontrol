@@ -1,0 +1,2 @@
+# studentinfocontrol
+这是我用于改进该信息管理系统的git
