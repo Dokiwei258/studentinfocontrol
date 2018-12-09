@@ -1,2 +1,3 @@
 # studentinfocontrol
 这是我用于改进该信息管理系统的git
+版本号请参考时间下载
