@@ -1,4 +1,5 @@
 //sysu学生信息管理系统 
+//github.com/Misakiwei/studentinfocontrol
 #include<iostream>
 #define MAX_Student 100//最大学生管理数
 //typedef int rank;
@@ -201,6 +202,9 @@ void admin::scoresort(student *T,int lo,int hi,int flag)
 	       }
 }
 }
+//助教小姐姐就不能不让我们手抄代码吗？
+//手抄代码真的太难受了qwq
+//求你了 
 void admin::namesort(student *T,int lo,int hi,int flag)
 {
 	bool flag1=false;
@@ -241,6 +245,13 @@ void admin::stunumsort(student *T,int lo,int hi,int flag)
 	       }
 }
 }
+//真的手抄代码是我见过最睿智的学c++操作
+//我觉得大学课堂不能停留在40年前
+//现在都8102年了,还用着c99的标准我就不说什么了 
+//真的，求你了
+//别让我手抄代码好吗 
+//我代码认真写，保证写的让您满意
+//别让我手抄代码好吗qwq 
 int admin::find(string const& e,int lo,int hi) const
 {
 	for(int i=lo;i<=hi;i++)
@@ -289,6 +300,7 @@ int main()
 	cout << "请参考源码的数据结构和算法" << endl;
 	cout << "本人不保证exe文件能正常运行" << endl;
 	cout << "源码400+行，作业而言修改bug过于困难，时间不足，敬请原谅" << endl;
+	cout << "欲知后续改进版本请移步 github.com/Misakiwei/studentinfocontrol" << endl; 
 	cout << "by 邓炜 2018/12/9" << endl;
     cout << "请按任意键开始下一步操作" << endl;
 	//system("pause");
@@ -481,7 +493,8 @@ void admincontrol(admin adminstrator)
 		default:
 			break;
 	}
-	
+	//最后我还是要说一下
+	//求你了小姐姐，我不想手抄代码 qwq
 }
 }
 
